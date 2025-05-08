@@ -3,7 +3,7 @@ from django.urls import include, path
 from rest_framework.reverse import reverse
 from rest_framework.routers import DefaultRouter
 
-from accounts.views import LoginAPIView, UserViewSet
+from accounts.views import LoginAPIView, RegisterAPIView, UserViewSet
 from company.views import CompanyViewSet
 from products.pdf_api import StockPDFView
 from products.views import ProductViewSet, StockViewSet
@@ -35,5 +35,6 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/login/', LoginAPIView.as_view(), name='api-login'),
     path('api/pdf/', StockPDFView.as_view(), name='stocks-pdf'),
+    path('api/register/', RegisterAPIView.as_view(), name='register'),
     
 ]

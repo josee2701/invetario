@@ -11,8 +11,21 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import LoginSerializer, UserSerializer
 
 
-class LoginAPIView(APIView):
+class RegisterAPIView(APIView):
     authentication_classes = []
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response(
+            {'user': UserSerializer(user).data},
+            status=status.HTTP_201_CREATED
+        )
+
+
+class LoginAPIView(APIView):
     permission_classes     = [AllowAny]
 
     def post(self, request):
