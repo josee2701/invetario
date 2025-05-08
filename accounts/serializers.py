@@ -6,21 +6,6 @@ from rest_framework import serializers
 
 User = get_user_model()
 
-class RegistrationSerializer(serializers.ModelSerializer):
-    # write_only: nunca devolvemos la contraseña en las respuestas
-    password = serializers.CharField(write_only=True)
-
-    class Meta:
-        model = User
-        fields = ('id', 'email', 'password')
-
-    def create(self, validated_data):
-        # Creamos el usuario y aplicamos set_password para hashear
-        user = User(email=validated_data['email'])
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
-
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
@@ -60,17 +45,23 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         groups_data = validated_data.pop('groups', [])
-        password   = validated_data.pop('password', None)
+        password    = validated_data.pop('password', None)
+        email       = validated_data.get('email')
 
-        # creamos usuario
-        user = User(**validated_data)
+        # asigna el username igual al email (o cualquier otro único)
+        user = User(
+            username=email,
+            email=email,
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', '')
+        )
+
         if password:
             user.set_password(password)
         else:
             user.set_unusable_password()
         user.save()
 
-        # asignamos grupos
         user.groups.set(groups_data)
         return user
 
