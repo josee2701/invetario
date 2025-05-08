@@ -5,6 +5,7 @@ from rest_framework.routers import DefaultRouter
 
 from accounts.views import LoginAPIView, UserViewSet
 from company.views import CompanyViewSet
+from products.views import ProductViewSet, StockViewSet
 
 
 class CustomRouter(DefaultRouter):
@@ -21,10 +22,13 @@ class CustomRouter(DefaultRouter):
 router = CustomRouter()
 router.register(r'users', UserViewSet, basename='user')
 router.register(r'companies', CompanyViewSet, basename='company')
+router.register(r'products', ProductViewSet, basename='product')
+router.register(r'stocks',   StockViewSet,   basename='stock')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include(router.urls)),
     path('api/login/', LoginAPIView.as_view(), name='api-login'),
+    
 ]

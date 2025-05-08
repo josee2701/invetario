@@ -6,6 +6,7 @@ from .models import Company
 
 
 class CompanySerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Company
         fields = ('nit', 'name', 'address', 'phone_number')
