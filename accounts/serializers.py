@@ -3,10 +3,12 @@
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import Group
 from rest_framework import serializers
+from rest_framework.permissions import AllowAny
 
 User = get_user_model()
 
 class LoginSerializer(serializers.Serializer):
+    permission_classes      = [AllowAny]
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
 
