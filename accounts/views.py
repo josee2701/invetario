@@ -6,6 +6,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import LoginSerializer, UserSerializer
 
@@ -17,8 +18,21 @@ class LoginAPIView(APIView):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        # Obtenemos o creamos token existente
-        return Response({ 'user': UserSerializer(user).data})
+
+        refresh = RefreshToken.for_user(user)
+
+        access_token = refresh.access_token
+
+        access_token['groups'] = [g.name for g in user.groups.all()]
+
+        access  = str(access_token)
+        refresh = str(refresh)
+
+        return Response({
+            'user':          UserSerializer(user).data,
+            'access_token':  access,
+            'refresh_token': refresh,
+        }, status=status.HTTP_200_OK)
 
 class UserViewSet(viewsets.ModelViewSet):
     """
