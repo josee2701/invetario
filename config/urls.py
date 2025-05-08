@@ -5,6 +5,7 @@ from rest_framework.routers import DefaultRouter
 
 from accounts.views import LoginAPIView, UserViewSet
 from company.views import CompanyViewSet
+from products.pdf_api import StockPDFView
 from products.views import ProductViewSet, StockViewSet
 
 
@@ -15,6 +16,9 @@ class CustomRouter(DefaultRouter):
             response = api_root(request, *args, **kwargs)
             # agregamos nuestro endpoint de login
             response.data['login'] = reverse('api-login', request=request, format=kwargs.get('format'))
+            # agregamos el endpoint de stocks pdf
+            response.data['stocks_pdf'] = reverse('stocks-pdf', request=request, format=kwargs.get('format'))
+            
             return response
         return custom_api_root
 
@@ -30,5 +34,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include(router.urls)),
     path('api/login/', LoginAPIView.as_view(), name='api-login'),
+    path('api/pdf/', StockPDFView.as_view(), name='stocks-pdf'),
     
 ]
