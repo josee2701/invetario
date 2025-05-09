@@ -55,5 +55,4 @@ class UserViewSet(viewsets.ModelViewSet):
     """ 
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
-    # Solo usuarios autenticados pueden ver/editarlos
-    # Si quieres que cada quien solo maneje su propio perfil, filtra en get_queryset
+ 
